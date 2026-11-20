@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La chitarra classica</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1fa89d">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -24,9 +28,14 @@ h1{font:700 clamp(32px,4.4vw,50px)/1.05 Fredoka,sans-serif;margin:0 0 10px;text-
 .scene svg{display:block;width:100%;height:auto;max-height:88vh}
 .part{cursor:pointer;transition:filter .2s}
 .part:hover{filter:brightness(1.12)}
+#gt.dim .part:not(.wood){opacity:.28;transition:opacity .3s}
+.part.wood *{fill:var(--wc)!important;transition:fill .3s}.part.wood [fill="none"],.part.wood line{fill:none!important;stroke:var(--wc)!important}.part.wood [stroke="transparent"]{stroke:transparent!important}.part.wood [fill="transparent"]{fill:transparent!important}
 .part.on{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 9px var(--acc))}
 .part:focus{outline:none}.part:focus-visible{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px var(--tq))}
 .seg{display:inline-flex;background:var(--line);border-radius:999px;padding:4px;margin:0 0 14px;flex-wrap:wrap}.seg button{border:0;background:none;letter-spacing:.02em}.seg .act{background:var(--acc);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 14px}.chips:empty{display:none}.chips button{min-height:36px;font-size:14px;padding:0 12px;display:flex;gap:6px;align-items:center}.sw{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.3);flex:none}.list b.sw{width:26px;height:26px}
+#info{background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(120,60,0,.45)}#ill svg{display:block;width:100%;height:auto}#itext{padding:clamp(18px,3vw,28px)}#itext h2{font:600 clamp(26px,3vw,34px)/1.1 Fredoka,sans-serif;margin:0 0 12px}#itext li{margin:0 0 8px}#itext p{margin:0 0 12px;max-width:68ch}
+.vib{animation:vib .6s linear}@keyframes vib{0%,100%{transform:translateY(0)}10%,30%,50%,70%{transform:translateY(-4px)}20%,40%,60%,80%{transform:translateY(4px)}}
 .arr{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;padding:0;font-size:34px;line-height:1;border:0;background:rgba(255,255,255,.85);color:#2b1d12;box-shadow:0 6px 16px rgba(0,0,0,.25)}#al{left:10px}#ar{right:10px}
 .pill{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#2b1d12;color:#fff;font:600 17px Fredoka,sans-serif;padding:6px 16px;border-radius:999px;white-space:nowrap}
 #labels{pointer-events:none;opacity:0;transition:opacity .25s}
@@ -61,7 +70,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding-bottom:28px}
 <div class="wrap">
 <div>
 <h1>Le parti della chitarra classica</h1>
-<div class="seg" role="group" aria-label="Modalità"><button id="mE" class="act" aria-pressed="true">ESTERNAMENTE</button><button id="mI" aria-pressed="false">INTERNAMENTE</button></div>
+<div class="seg" role="group" aria-label="Modalità"><button id="mE" class="act" aria-pressed="true">ESTERNAMENTE</button><button id="mI" aria-pressed="false">INTERNAMENTE</button><button id="mW" aria-pressed="false">LEGNI</button><button id="mS" aria-pressed="false">SCOPRI</button></div>
 <p class="intro">Tocca una parte dello strumento per scoprire come si chiama e a cosa serve. Con le frecce (o scorrendo col dito) giri la chitarra: davanti, di lato e dietro.</p>
 <div class="scene" id="scene">
 <svg viewBox="0 0 800 1000" role="img" aria-label="Chitarra classica in una stanza luminosa, con parti cliccabili">
@@ -179,10 +188,11 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding-bottom:28px}
 <g class="part" data-p="blocco" clip-path="url(#bc)"><rect x="168" y="1018" width="64" height="34" rx="4" fill="#a86a36" stroke="#6e3618" stroke-width="2"/></g>
 </g>
 </g></g>
-<g transform="translate(220,25) scale(.9)"><g id="labels" font-family="Nunito,sans-serif" font-weight="700" font-size="22"></g></g>
+<g transform="translate(220,25) scale(.9)"><g id="labels" font-family="Nunito,sans-serif" font-weight="700" font-size="22"></g><g id="warr" font-family="Nunito,sans-serif" font-weight="800" font-size="22" pointer-events="none"></g></g>
 </svg>
 <button class="arr" id="al" aria-label="Ruota a sinistra">‹</button><button class="arr" id="ar" aria-label="Ruota a destra">›</button><div class="pill" id="vn">Davanti</div>
 </div>
+<div id="info" hidden><div id="ill"></div><div id="itext"></div></div>
 </div>
 
 <div>
@@ -201,7 +211,7 @@ footer{text-align:center;color:var(--soft);font-size:14px;padding-bottom:28px}
 <button id="x" aria-label="Chiudi">×</button>
 <div class="num" id="cn"></div>
 <h2 id="ct"></h2>
-<p id="cd"></p>
+<p id="cd"></p><div class="chips" id="cw"></div>
 <div class="nav"><button id="prev">‹ Precedente</button><button id="next">Successiva ›</button></div>
 </div>
 
@@ -251,37 +261,117 @@ let s='',ti='';
 for(let i=0;i<6;i++){const xn=180+i*8,xs=176+i*9.6,hx=i<3?186:214,hy=ry[i<3?2-i:i-3],w=i<3?3.2-i*.4:2.2-(i-3)*.35,c=i<3?'#d7c08f':'#fbf6ea';
 s+=`<path d="M${hx},${hy} L${xn},170 L${xs},866 L${xs},889" fill="none" stroke="${c}" stroke-width="${w}"/><path d="M${xn},170 L${xs},866" stroke="transparent" stroke-width="8"/>`;ti+=`<circle cx="${xs}" cy="889" r="2.5"/>`}
 $('strings').innerHTML=s;$('ties').innerHTML=ti;
-const VW=['f','l','r'],VN={e:{f:'Davanti',l:'Di lato',r:'Dietro'},i:{f:'Tavola vista da dentro',l:'Sezione di lato',r:'Fondo visto da dentro'}};let vi=0,mode='e';
+const W=[
+{n:'Abete rosso',c:'#f2dba8',p:['tavola'],t:'Il legno più usato per la tavola. Chiaro, leggero ed elastico, dà un suono brillante e definito che migliora con gli anni. Si usa anche dentro la cassa per la catenatura a ventaglio e le barre armoniche.'},
+{n:'Cedro rosso',c:'#c98a52',p:['tavola'],t:'Alternativa all’abete per la tavola, di colore bruno-rossiccio. Dà un suono caldo e morbido, “pronto” fin da subito. Si è diffuso nella chitarra classica dagli anni ’60.'},
+{n:'Palissandro',c:'#5c2a12',p:['fondo','fasce','ponticello','tastiera','paletta','filetti','rosetta'],t:'Legno scuro e venato, il più tradizionale per fondo e fasce. Dà bassi profondi e un suono ricco di armonici. Il palissandro di Rio (brasiliano) è protetto e quasi introvabile: oggi si usa soprattutto quello indiano.'},
+{n:'Ebano',c:'#1a1412',p:['tastiera','ponticello','paletta','rosetta'],t:'Durissimo, pesante e quasi nero. Perfetto per la tastiera: è liscio e resiste per anni allo sfregamento di dita e corde.'},
+{n:'Cedro spagnolo',c:'#b97a4c',p:['manico','tacco','paletta'],t:'Nonostante il nome non è un vero cedro. Leggero, stabile e profumato: è il legno tradizionale del manico della chitarra classica. Si usa anche per lo zoccolo dentro la cassa.'},
+{n:'Mogano',c:'#8a3e22',p:['manico','tacco','paletta','fondo','fasce'],t:'Legno rossiccio, robusto e stabile. Si usa per il manico e, in alcune chitarre, per fondo e fasce: suono caldo e rotondo.'},
+{n:'Acero',c:'#ead3a6',p:['fondo','fasce','filetti','rosetta'],t:'Legno chiaro e duro, a volte con riflessi “fiammati”. Per fondo e fasce dà un suono chiaro e brillante; si usa molto anche per filetti e rosette.'},
+{n:'Cipresso',c:'#e8c98e',p:['fondo','fasce'],t:'Chiaro e leggerissimo, è il legno della chitarra flamenca: suono secco, brillante e percussivo, adatto ai ritmi e ai rasgueados.'},
+{n:'Multistrato (laminato)',c:'#c9a070',p:['tavola','fondo','fasce'],t:'Più fogli sottili di legno incollati insieme. Si usa nelle chitarre da studio, più economiche: è robusto e resiste a caldo e umidità, ma vibra meno del legno massello (in un pezzo unico).'},
+{n:'Osso, metallo e nylon',c:'#f6f0e0',p:['capotasto','selletta','tasti','meccaniche','corde'],t:'Non tutto è legno! Capotasto e selletta sono in osso (o materiale sintetico), i tasti in alpacca (una lega di rame, nichel e zinco), le meccaniche in ottone e plastica, le corde in nylon.'}
+];
+const PW={paletta:'Stesso legno del manico (cedro spagnolo o mogano), con sopra una sottile impiallacciatura decorativa di palissandro o ebano.',meccaniche:'Niente legno: meccanismo in ottone o altro metallo, rulli in plastica o osso, palline in plastica o madreperla.',capotasto:'Osso, il migliore per il suono, oppure materiale sintetico. Non è legno.',tasti:'Metallo: una lega chiamata alpacca (rame, nichel e zinco), a volte acciaio.',manico:'Cedro spagnolo (il più tradizionale: leggero e stabile) oppure mogano.',tastiera:'Ebano, il più pregiato, nero e durissimo; oppure palissandro.',tacco:'Fa parte del manico, quindi stesso legno: cedro spagnolo o mogano.',corde:'Nylon per le corde acute; nylon avvolto da filo metallico per le gravi. Un tempo si usava il budello.',rosetta:'Un mosaico di centinaia di bastoncini di legni diversi, naturali o tinti (acero, palissandro, ebano…), tagliati a fette sottilissime.',buca:'È un foro nella tavola: intorno c’è lo stesso legno della tavola, abete o cedro.',tavola:'Abete rosso o cedro rosso: legni leggeri ed elastici, tagliati “a quarti” perché le venature siano dritte. Nelle chitarre da studio può essere in multistrato.',filetti:'Strisce di acero, palissandro o legni tinti; a volte plastica nelle chitarre economiche.',fasce:'Lo stesso legno del fondo: palissandro, mogano, acero o cipresso (chitarra flamenca); multistrato nelle chitarre da studio.',fondo:'Palissandro (il più classico), mogano, acero, cipresso per la flamenca; multistrato nelle chitarre da studio.',selletta:'Osso o materiale sintetico, come il capotasto.',ponticello:'Palissandro, a volte ebano: un legno duro che non si deforma con la tensione delle corde.'};
+const wave=(x,y,w,a,c,col,sw=4)=>{let d=`M${x},${y}`;for(let i=1;i<=80;i++){const t=i/80;d+=` L${(x+t*w).toFixed(1)},${(y-a*Math.sin(t*c*2*Math.PI)).toFixed(1)}`}return `<path d="${d}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/>`};
+const badge=(x,y,n)=>`<g><circle cx="${x}" cy="${y}" r="19" fill="#e83f6f" stroke="#fff" stroke-width="3"/><text x="${x}" y="${y+7}" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">${n}</text></g>`;
+const gi=(x,y,s,c)=>`<g transform="translate(${x},${y}) scale(${s})"><rect x="-5" y="-95" width="10" height="70" fill="#5a2c12"/><rect x="-9" y="-112" width="18" height="20" rx="4" fill="#5a2c12"/><ellipse cx="0" cy="-12" rx="24" ry="22" fill="${c}"/><ellipse cx="0" cy="22" rx="32" ry="28" fill="${c}"/><circle cx="0" cy="-4" r="7" fill="#2b1408"/></g>`;
+const SF='font-family="Nunito,sans-serif" font-weight="700"';
+const ST=[['1ª','Mi',329.63],['2ª','Si',246.94],['3ª','Sol',196],['4ª','Re',146.83],['5ª','La',110],['6ª','Mi',82.41]];
+const T=[
+{n:'Come nasce il suono',s:`<svg viewBox="0 0 800 460" ${SF}><defs><linearGradient id="t1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#ffc35c"/></linearGradient></defs><rect width="800" height="460" fill="url(#t1)"/>
+<g transform="translate(0,10)"><ellipse cx="566" cy="258" rx="178" ry="178" fill="#8b4a24"/><ellipse cx="346" cy="258" rx="138" ry="138" fill="#8b4a24"/><ellipse cx="560" cy="250" rx="175" ry="175" fill="#e8b870"/><ellipse cx="340" cy="250" rx="135" ry="135" fill="#e8b870"/>
+<rect x="0" y="226" width="215" height="48" fill="#2a1d16"/><circle cx="360" cy="250" r="62" fill="none" stroke="#1fa89d" stroke-width="10" stroke-dasharray="5 4"/><circle cx="360" cy="250" r="50" fill="#1a0d06"/>
+<g fill="none" stroke="#fff" stroke-width="5">${[0,1,2].map(k=>`<circle cx="360" cy="250" r="50" opacity="0"><animate attributeName="r" values="50;250" dur="1.8s" begin="${k*.6}s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="1.8s" begin="${k*.6}s" repeatCount="indefinite"/></circle>`).join('')}</g>
+<rect x="608" y="196" width="34" height="108" rx="6" fill="#3a1f0f"/><rect x="614" y="200" width="6" height="100" fill="#f6f0e0"/>
+${[0,1,2,3,4,5].map(i=>{const y=230+i*8;return i==2?`<path d="M0,${y} Q312,${y} 617,${y}" stroke="#fff" stroke-width="3" fill="none"><animate attributeName="d" values="M0,${y} Q312,${y-22} 617,${y};M0,${y} Q312,${y+22} 617,${y};M0,${y} Q312,${y-22} 617,${y}" dur=".14s" repeatCount="indefinite"/></path>`:`<line x1="0" y1="${y}" x2="617" y2="${y}" stroke="${i>2?'#d7c08f':'#fbf6ea'}" stroke-width="${1.5+i*.4}"/>`}).join('')}
+<ellipse cx="520" cy="226" rx="17" ry="26" fill="#f2b48a" stroke="#c07a50" stroke-width="2"/>
+${badge(520,178,1)}${badge(160,206,2)}${badge(625,168,3)}${badge(600,385,4)}${badge(360,338,5)}</g></svg>`,
+h:`<p>Il suono è una vibrazione che viaggia nell’aria fino alle nostre orecchie. Nella chitarra nasce in cinque passaggi:</p><ol><li><b>Il dito pizzica la corda</b>: la tira un poco e la lascia andare.</li><li><b>La corda vibra</b> avanti e indietro, da 80 a più di 600 volte al secondo. Da sola però muove pochissima aria e il suono sarebbe debolissimo.</li><li><b>Il ponticello</b> e la selletta passano la vibrazione alla tavola.</li><li><b>La tavola armonica vibra</b> come la pelle di un tamburo e mette in movimento l’aria dentro la cassa.</li><li><b>Il suono esce dalla buca</b> e da tutta la tavola, molto più forte e ricco.</li></ol><p>Quando la vibrazione si spegne, il suono finisce. Per fermarlo subito si appoggia la mano sulle corde: si dice <b>smorzare</b>.</p>`},
+{n:'Acuto o grave?',s:`<svg viewBox="0 0 800 460" ${SF}><rect width="800" height="460" fill="#fff4d6"/><rect x="160" y="0" width="310" height="460" fill="#ffd9c4"/><rect x="490" y="0" width="310" height="460" fill="#c9f0ea"/>
+<text x="315" y="44" text-anchor="middle" font-size="26" fill="#c2410c">Più grave</text><text x="645" y="44" text-anchor="middle" font-size="26" fill="#0f766e">Più acuto</text>
+${['Lunghezza','Spessore','Tensione'].map((l,r)=>`<text x="20" y="${130+r*130}" font-size="22" fill="#2b1d12">${l}</text>`).join('')}
+<line x1="180" y1="100" x2="450" y2="100" stroke="#5a2c12" stroke-width="5"/>${wave(180,140,270,14,2,'#e8590c')}<line x1="560" y1="100" x2="730" y2="100" stroke="#5a2c12" stroke-width="5"/>${wave(510,140,270,14,6,'#0d9488')}
+<line x1="180" y1="230" x2="450" y2="230" stroke="#d7c08f" stroke-width="12" stroke-linecap="round"/>${wave(180,270,270,14,2,'#e8590c')}<line x1="510" y1="230" x2="780" y2="230" stroke="#fbf6ea" stroke-width="3"/><line x1="510" y1="230" x2="780" y2="230" stroke="#bba" stroke-width="1"/>${wave(510,270,270,14,6,'#0d9488')}
+<path d="M180,350 Q315,382 450,350" stroke="#5a2c12" stroke-width="5" fill="none"/>${wave(180,405,270,14,2,'#e8590c')}<line x1="510" y1="350" x2="780" y2="350" stroke="#5a2c12" stroke-width="5"/><path d="M505,350 l-18,-10 v20z M785,350 l18,-10 v20z" fill="#e83f6f"/>${wave(510,405,270,14,6,'#0d9488')}</svg>`,
+h:`<p>Ogni nota ha la sua <b>frequenza</b>: quante volte al secondo vibra la corda. Più vibrazioni vuol dire un suono più acuto. Nel disegno le onde strette sono le vibrazioni veloci. La frequenza dipende da tre cose:</p><ul><li><b>Lunghezza</b>: una corda corta vibra più in fretta. Quando premi un tasto accorci la parte che vibra: per questo, avvicinandoti alla buca, le note salgono.</li><li><b>Spessore</b>: le corde grosse e pesanti vibrano più lentamente. Sono i bassi.</li><li><b>Tensione</b>: più una corda è tesa, più è acuta. Girando le meccaniche cambi la tensione: è così che si accorda.</li></ul><p>Il La della 5ª corda vibra 110 volte al secondo. Premuto al 12° tasto, cioè a metà corda, vibra il doppio (220): è lo stesso La, un’<b>ottava</b> più in alto.</p>`},
+{n:'Le sei corde',s:`<svg viewBox="0 0 800 400" ${SF}><rect width="800" height="400" fill="#ffe08a"/><rect x="130" y="40" width="670" height="320" fill="#2a1d16"/><rect x="130" y="40" width="12" height="320" fill="#f6f0e0"/>
+${[1,2,3,4,5,6,7,8].map(k=>{const x=142+1100*(1-2**(-k/12));return `<line x1="${x}" y1="40" x2="${x}" y2="360" stroke="#c9c4bb" stroke-width="4"/>`}).join('')}
+${ST.map((s,i)=>{const y=70+i*52,c=['#e83f6f','#ff8f3c','#f5c518','#1fa89d','#3b4fd8','#8b5cf6'][i];return `<g class="str" data-i="${i}" style="cursor:pointer"><rect x="6" y="${y-20}" width="112" height="40" rx="20" fill="${c}"/><text x="62" y="${y+8}" text-anchor="middle" font-size="20" fill="#fff">${s[0]} ${s[1]}</text><line class="sl" x1="136" y1="${y}" x2="800" y2="${y}" stroke="${i>2?'#d7c08f':'#fbf6ea'}" stroke-width="${2+i*.9}"/><line x1="0" y1="${y}" x2="800" y2="${y}" stroke="transparent" stroke-width="44"/></g>`}).join('')}</svg>`,
+h:`<p><b>Tocca una corda nel disegno per ascoltarla.</b> Le corde si contano dalla più sottile (1ª) alla più grossa (6ª):</p><ul><li><b>1ª Mi</b> – la più acuta, detta “cantino”</li><li><b>2ª Si</b></li><li><b>3ª Sol</b></li><li><b>4ª Re</b></li><li><b>5ª La</b></li><li><b>6ª Mi</b> – la più grave, il “Mi basso”</li></ul><p>Dalla più grave alla più acuta si dice <b>Mi, La, Re, Sol, Si, Mi</b>. Le due corde di Mi sono la stessa nota a due ottave di distanza. Per accordare si parte spesso dal La della 5ª corda, che è due ottave sotto il La del diapason (440 vibrazioni al secondo).</p>`},
+{n:'Come si tiene',s:`<svg viewBox="0 0 800 460" ${SF}><rect width="800" height="460" fill="#c9f0ea"/><rect y="440" width="800" height="20" fill="#e3a768"/><rect x="0" y="430" width="800" height="12" fill="#ff8f6b"/>
+<rect x="335" y="140" width="130" height="180" rx="10" fill="#8a4824"/><rect x="315" y="300" width="170" height="18" rx="6" fill="#6e3618"/><path d="M330,318 V440 M470,318 V440" stroke="#6e3618" stroke-width="10"/>
+<rect x="355" y="150" width="90" height="160" rx="30" fill="#1fa89d"/><circle cx="400" cy="112" r="32" fill="#f2b48a"/><path d="M370,98 Q400,66 430,98" fill="#5a2c12"/>
+<rect x="352" y="306" width="40" height="128" rx="14" fill="#3b4fd8"/><ellipse cx="365" cy="436" rx="26" ry="10" fill="#2b1d12"/>
+<rect x="408" y="290" width="40" height="110" rx="14" fill="#3b4fd8"/><rect x="392" y="402" width="76" height="38" rx="6" fill="#e83f6f"/><ellipse cx="436" cy="398" rx="26" ry="10" fill="#2b1d12"/>
+<g transform="translate(400,300) rotate(-42)"><ellipse cx="-72" cy="0" rx="72" ry="62" fill="#e8b870" stroke="#8b4a24" stroke-width="4"/><ellipse cx="6" cy="0" rx="54" ry="48" fill="#e8b870" stroke="#8b4a24" stroke-width="4"/><ellipse cx="-20" cy="0" rx="60" ry="44" fill="#e8b870"/><circle cx="4" cy="0" r="17" fill="#2b1408"/><rect x="52" y="-10" width="190" height="20" fill="#2a1d16"/><rect x="242" y="-14" width="44" height="28" rx="5" fill="#6b3518"/><rect x="-62" y="-14" width="10" height="28" fill="#3a1f0f"/></g>
+<path d="M560,300 A160,160 0 0 0 513,187" fill="none" stroke="#e83f6f" stroke-width="4" stroke-dasharray="8 6"/><line x1="400" y1="300" x2="600" y2="300" stroke="#e83f6f" stroke-width="3" stroke-dasharray="8 6"/><text x="585" y="245" font-size="24" fill="#2b1d12">circa 45°</text>
+<text x="490" y="428" font-size="20" fill="#2b1d12">poggiapiede</text></svg>`,
+h:`<p>Una buona posizione fa suonare meglio e non stanca. Ecco quella classica:</p><ul><li>Siediti sulla parte davanti della sedia, con la schiena dritta ma rilassata.</li><li>Metti il piede sinistro sul <b>poggiapiede</b>, oppure usa un supporto appoggiato sulla gamba.</li><li>La chitarra poggia sulla gamba sinistra e tocca il petto e la gamba destra.</li><li>Il manico sale inclinato, più o meno a 45°: la paletta arriva circa all’altezza della spalla.</li><li>L’avambraccio destro si appoggia sul bordo della cassa; la mano destra suona tra la buca e il ponticello.</li><li>Spalle basse e rilassate, polso sinistro morbido.</li></ul>`},
+{n:'Le dita: p i m a',s:(()=>{const hand=(ox,lab,col,thumb)=>{const F=[[0,110],[36,126],[72,116],[108,92]];return `<g transform="translate(${ox},150)"><rect x="-6" y="100" width="146" height="150" rx="40" fill="#f2b48a"/>${F.map(([x,h],k)=>`<rect x="${x}" y="${108-h}" width="32" height="${h+20}" rx="16" fill="#f2b48a" stroke="#d99a72" stroke-width="2"/><circle cx="${x+16}" cy="${122-h}" r="17" fill="${col[k+1]}"/><text x="${x+16}" y="${129-h}" text-anchor="middle" font-size="20" fill="#fff">${lab[k+1]}</text>`).join('')}<rect x="-58" y="150" width="34" height="96" rx="17" transform="rotate(-38 -41 198)" fill="#f2b48a" stroke="#d99a72" stroke-width="2"/>${thumb?`<circle cx="-62" cy="150" r="17" fill="${col[0]}"/><text x="-62" y="157" text-anchor="middle" font-size="20" fill="#fff">${lab[0]}</text>`:''}</g>`};
+return `<svg viewBox="0 0 800 460" ${SF}><rect width="800" height="460" fill="#ffe08a"/><rect x="400" width="400" height="460" fill="#ffd0e0"/><text x="200" y="50" text-anchor="middle" font-size="28" fill="#2b1d12">Mano destra</text><text x="600" y="50" text-anchor="middle" font-size="28" fill="#2b1d12">Mano sinistra</text>${hand(150,['p','i','m','a','c'],['#e83f6f','#1fa89d','#3b4fd8','#ff8f3c','#8b5cf6'],1)}${hand(550,['','1','2','3','4'],['','#1fa89d','#3b4fd8','#ff8f3c','#8b5cf6'],0)}</svg>`})(),
+h:`<p><b>Mano destra</b>: le dita si indicano con lettere che vengono dallo spagnolo.</p><ul><li><b>p</b> = pollice (<i>pulgar</i>): di solito suona i bassi, le corde 4ª, 5ª e 6ª</li><li><b>i</b> = indice, <b>m</b> = medio, <b>a</b> = anulare: suonano soprattutto le corde acute</li><li>il mignolo (<b>c</b>) si usa raramente</li></ul><p>Ci sono due tocchi: <b>appoggiato</b>, quando il dito dopo la corda si ferma su quella vicina, e <b>libero</b>, quando passa sopra senza toccarla.</p><p><b>Mano sinistra</b>: le dita si indicano con i numeri, dall’indice (1) al mignolo (4). Il pollice non ha numero e resta dietro al manico. Si preme con la punta delle dita, vicino al tasto e con le unghie corte.</p>`},
+{n:'Prendersene cura',s:`<svg viewBox="0 0 800 340" ${SF}><rect width="800" height="340" fill="#c9f0ea"/>
+${[['#3b4fd8','Umidità giusta'],['#e83f6f','Niente caldo'],['#8b4a24','Custodia'],['#ff8f3c','Panno morbido'],['#1fa89d','Corde nuove']].map(([c,t],k)=>`<circle cx="${80+160*k}" cy="140" r="66" fill="${c}"/><text x="${80+160*k}" y="250" text-anchor="middle" font-size="20" fill="#2b1d12">${t}</text>`).join('')}
+<path d="M80,98 C80,98 52,138 52,156 a28,28 0 0 0 56,0 C108,138 80,98 80,98z" fill="#fff"/>
+<rect x="230" y="96" width="20" height="64" rx="10" fill="#fff"/><circle cx="240" cy="168" r="18" fill="#fff"/><rect x="236" y="120" width="8" height="46" fill="#e83f6f"/><circle cx="240" cy="168" r="10" fill="#e83f6f"/>
+<rect x="372" y="118" width="76" height="52" rx="12" fill="#fff"/><path d="M396,118 v-12 h28 v12" stroke="#fff" stroke-width="7" fill="none"/>
+<path d="M528,112 q16,-12 32,0 t32,0 v54 q-16,12 -32,0 t-32,0z" fill="#fff"/>
+<g stroke="#fff" stroke-width="5" stroke-linecap="round"><line x1="696" y1="105" x2="696" y2="175"/><line x1="720" y1="105" x2="720" y2="175"/><line x1="744" y1="105" x2="744" y2="175"/></g><circle cx="770" cy="140" r="12" fill="none" stroke="#fff" stroke-width="4"/></svg>`,
+h:`<ul><li><b>Umidità</b>: il legno teme l’aria troppo secca o troppo umida, che lo fa ritirare o gonfiare. L’ideale è intorno al 45–55%. Tienila lontana da termosifoni e finestre aperte.</li><li><b>Caldo</b>: mai al sole diretto o in auto chiusa d’estate. La colla e la vernice soffrono.</li><li><b>Custodia</b>: quando non suoni, rimettila nella custodia. La protegge da urti e polvere.</li><li><b>Pulizia</b>: lavati le mani prima di suonare; dopo, passa un panno morbido e asciutto su corde e tastiera.</li><li><b>Corde</b>: quando suonano spente o non restano accordate, è ora di cambiarle.</li></ul>`},
+{n:'Un po’ di storia',s:`<svg viewBox="0 0 800 420" ${SF}><rect width="800" height="420" fill="#ffe08a"/><line x1="40" y1="290" x2="760" y2="290" stroke="#2b1d12" stroke-width="6" stroke-linecap="round"/>
+${[['1500','Vihuela',.8,'#f2dba8'],['1600','Chitarra barocca',.9,'#e8b870'],['1800','6 corde singole',1,'#d9a55a'],['1860','Torres',1.2,'#e8b870'],['1940','Corde in nylon',1.25,'#f2c98e']].map(([y,t,s,c],k)=>`${gi(100+150*k,175,s,c)}<circle cx="${100+150*k}" cy="290" r="14" fill="#e83f6f" stroke="#fff" stroke-width="4"/><text x="${100+150*k}" y="340" text-anchor="middle" font-size="26" fill="#2b1d12">${y}</text><text x="${100+150*k}" y="372" text-anchor="middle" font-size="18" fill="#6b5444">${t}</text>`).join('')}</svg>`,
+h:`<ul><li><b>Cinquecento</b>: in Spagna è amatissima la <b>vihuela</b>, cugina della chitarra. La chitarra rinascimentale è piccola e ha 4 “cori”, cioè coppie di corde.</li><li><b>Seicento</b>: la <b>chitarra barocca</b> ha 5 cori e accompagna canti e danze.</li><li><b>Fine Settecento – Ottocento</b>: la chitarra ha ormai <b>6 corde singole</b>. Scrivono per lei grandi chitarristi come Fernando Sor, Mauro Giuliani e Matteo Carcassi.</li><li><b>Metà Ottocento</b>: il liutaio spagnolo <b>Antonio de Torres</b> costruisce chitarre più grandi, con la catenatura a ventaglio: nasce la forma della chitarra classica di oggi. Francisco Tárrega ne diventa il grande interprete.</li><li><b>Novecento</b>: <b>Andrés Segovia</b> porta la chitarra nelle sale da concerto di tutto il mondo. Negli anni ’40 arrivano le <b>corde di nylon</b>, al posto del budello.</li></ul>`}
+];
+let curT=0,AC;
+function pluck(f){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const sr=AC.sampleRate,len=Math.floor(sr*2.5),b=AC.createBuffer(1,len,sr),d=b.getChannelData(0),N=Math.round(sr/f),q=new Float32Array(N);for(let i=0;i<N;i++)q[i]=Math.random()*2-1;for(let r=0;r<2;r++)for(let i=1;i<N;i++)q[i]=(q[i]+q[i-1])/2;let p=0;for(let i=0;i<len;i++){const n=(p+1)%N;d[i]=q[p]*.6;q[p]=.997*.5*(q[p]+q[n]);p=n}const s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.start()}catch(e){}}
+function showT(){const t=T[curT];$('ill').innerHTML=t.s;$('itext').innerHTML=`<h2>${t.n}</h2>`+t.h;
+$('ill').querySelectorAll('.str').forEach(g=>g.addEventListener('click',()=>{pluck(ST[+g.dataset.i][2]);const l=g.querySelector('.sl');l.classList.remove('vib');void l.getBBox();l.classList.add('vib')}))}
+let hl=[],kind='',curW=-1,woodSel=-1;
+const VW=['f','l','r'],VN={e:{f:'Davanti',l:'Di lato',r:'Dietro'},w:{f:'Legni · davanti',l:'Legni · di lato',r:'Legni · dietro'},i:{f:'Tavola vista da dentro',l:'Sezione di lato',r:'Fondo visto da dentro'}};let vi=0,mode='e';
 let fan='';for(let i=0;i<7;i++)fan+=`<line x1="${200+(i-3)*7}" y1="768" x2="${200+(i-3)*46}" y2="1000" stroke="#c8904e" stroke-width="7" stroke-linecap="round"/>`;
 $('fan').innerHTML=fan;
-const cv=()=>VW[vi],vid=()=>(mode=='e'?'v-':'i-')+cv(),mp=()=>P.filter(p=>p.m==mode);
+const cv=()=>VW[vi],vid=()=>(mode=='i'?'i-':'v-')+cv(),mp=()=>P.filter(p=>p.m==(mode=='i'?'i':'e'));
 function labels(){const v=cv();$('labels').innerHTML=mp().filter(p=>p.v[v]).map(p=>{const[ax,ay,sd,ly]=p.v[v],l=sd=='l',x=l?-5:425,nm=p.s||p.n,tw=nm.length*11+20,bx=l?x-tw+8:x-8;return `<path d="M${ax},${ay} L${l?x+14:x-14},${ly}" stroke="#2b1d12" stroke-width="2.5" fill="none"/><circle cx="${ax}" cy="${ay}" r="5" fill="#e83f6f" stroke="#fff" stroke-width="2"/><rect x="${bx}" y="${ly-19}" width="${tw}" height="36" rx="18" fill="#fff" stroke="#2b1d12" stroke-width="2"/><text x="${l?x-2:x+2}" y="${ly+8}" text-anchor="${l?'end':'start'}" fill="#2b1d12">${nm}</text>`}).join('')}
 const seen=new Set();let cur=-1;
 const list=$('list');
-function render(){document.querySelectorAll('.view').forEach(g=>g.style.display=g.id==vid()?'':'none');$('vn').textContent=VN[mode][cv()];labels();
-if(cur>=0){if(P[cur].m==mode&&P[cur].v[cv()])mark();else close()}
-list.innerHTML=mp().map(p=>{const i=P.indexOf(p);return `<li><button data-i="${i}" class="${seen.has(p.id)?'seen':''} ${i==cur?'cur':''}"><b>${mp().indexOf(p)+1}</b>${p.n}</button></li>`}).join('')}
+function render(){const C=mode=='c';$('scene').hidden=C;$('info').hidden=!C;$('lab').hidden=C;if(C){list.innerHTML=T.map((t,k)=>`<li><button data-t="${k}" class="${k==curT?'cur':''}"><b>${k+1}</b>${t.n}</button></li>`).join('');showT();return}
+document.querySelectorAll('.view').forEach(g=>g.style.display=g.id==vid()?'':'none');$('vn').textContent=VN[mode][cv()];labels();
+if(mode!='w'&&cur>=0&&!(P[cur].m==mode&&P[cur].v[cv()]))close();mark();
+list.innerHTML=mode=='w'?W.map((w,k)=>`<li><button data-w="${k}" class="${k==curW?'cur':''}"><b class="sw" style="background:${w.c}"></b>${w.n}</button></li>`).join(''):mp().map(p=>{const i=P.indexOf(p);return `<li><button data-i="${i}" class="${seen.has(p.id)?'seen':''} ${i==cur?'cur':''}"><b>${mp().indexOf(p)+1}</b>${p.n}</button></li>`}).join('')}
 function swap(fn,anim){if(!anim||matchMedia('(prefers-reduced-motion: reduce)').matches){fn();render();return}
 $('gt').classList.add('fade');$('labels').classList.add('fade');setTimeout(()=>{fn();render();$('gt').classList.remove('fade');$('labels').classList.remove('fade')},230)}
 function setView(i,anim){swap(()=>{vi=(i+3)%3},anim)}
-function setMode(m,anim){$('mE').classList.toggle('act',m=='e');$('mI').classList.toggle('act',m=='i');$('mE').setAttribute('aria-pressed',m=='e');$('mI').setAttribute('aria-pressed',m=='i');swap(()=>{mode=m;vi=0},anim)}
+function seg(m){[['mE','e'],['mI','i'],['mW','w'],['mS','c']].forEach(([id,k])=>{$(id).classList.toggle('act',m==k);$(id).setAttribute('aria-pressed',m==k)})}
+function setMode(m,anim){seg(m);if(m!='w')woodSel=-1;swap(()=>{mode=m;vi=0},anim)}
 const parts=[...document.querySelectorAll('.part')];
 parts.forEach(g=>{g.setAttribute('tabindex','0');g.setAttribute('role','button');const p=P.find(q=>q.id==g.dataset.p);g.setAttribute('aria-label',p.n);
-g.addEventListener('click',e=>{e.stopPropagation();open(P.indexOf(p))});
-g.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();open(P.indexOf(p))}})});
-function mark(){parts.forEach(g=>g.classList.toggle('on',cur>=0&&g.dataset.p==P[cur].id))}
-function open(i){cur=i;const p=P[i];seen.add(p.id);
-if(p.m!=mode||!p.v[cv()]){const want=VW.findIndex(v=>p.v[v]);if(p.m!=mode){$('mE').classList.toggle('act',p.m=='e');$('mI').classList.toggle('act',p.m=='i')}swap(()=>{mode=p.m;if(!p.v[cv()])vi=want},true)}else render();
+const go=()=>mode=='w'?openPW(p):open(P.indexOf(p));g.addEventListener('click',e=>{e.stopPropagation();go()});
+g.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();go()}})});
+function mark(){const ws=mode=='w'&&woodSel>=0?W[woodSel]:null;parts.forEach(g=>{g.classList.toggle('on',hl.includes(g.dataset.p));const w=!!ws&&ws.p.includes(g.dataset.p);g.classList.toggle('wood',w);if(w)g.style.setProperty('--wc',ws.c)});$('card').style.borderTopColor=kind=='w'&&ws?ws.c:'';$('gt').classList.remove('dim');
+const v=cv(),lum=c=>{const n=parseInt(c.slice(1),16);return((n>>16)*.3+((n>>8)&255)*.59+(n&255)*.11)};
+$('warr').innerHTML=!ws?'':P.filter(p=>p.m=='e'&&ws.p.includes(p.id)&&p.v[v]).map(p=>{const[ax,ay,sd,ly]=p.v[v],l=sd=='l',x=l?-5:425,tw=p.n.length*12+30,bx=l?x-tw+8:x-8,sx=l?x+10:x-10,an=Math.atan2(ay-ly,ax-sx),hx=ax-Math.cos(an)*6,hy=ay-Math.sin(an)*6,c=Math.cos(an),s2=Math.sin(an),tc=lum(ws.c)<120?'#fff':'#2b1d12';
+return `<line x1="${sx}" y1="${ly}" x2="${hx-c*14}" y2="${hy-s2*14}" stroke="#2b1d12" stroke-width="5" stroke-linecap="round"/><polygon points="${hx},${hy} ${hx-c*22-s2*11},${hy-s2*22+c*11} ${hx-c*22+s2*11},${hy-s2*22-c*11}" fill="#2b1d12"/><rect x="${bx}" y="${ly-21}" width="${tw}" height="42" rx="21" fill="${ws.c}" stroke="#2b1d12" stroke-width="3"/><text x="${l?x-6:x+6}" y="${ly+8}" text-anchor="${l?'end':'start'}" fill="${tc}">${p.n}</text>`}).join('')}
+function open(i){cur=i;curW=-1;kind='p';const p=P[i];hl=[p.id];$('cw').innerHTML='';seen.add(p.id);
+if(p.m!=mode||!p.v[cv()]){const want=VW.findIndex(v=>p.v[v]);if(p.m!=mode)seg(p.m);swap(()=>{mode=p.m;if(!p.v[cv()])vi=want},true)}else render();
 mark();const l=mp().length,k=P.filter(q=>q.m==p.m).indexOf(p);
 $('cn').textContent=`Parte ${k+1} di ${P.filter(q=>q.m==p.m).length} · si vede: ${VW.filter(v=>p.v[v]).map(v=>VN[p.m][v].toLowerCase()).join(', ')}`;$('ct').textContent=p.n;$('cd').textContent=p.t;$('card').classList.add('open');
 $('cnt').textContent=seen.size==P.length?'Bravo! Hai scoperto tutte le 28 parti':`Parti scoperte: ${seen.size} su ${P.length}`;$('met').style.width=seen.size/P.length*100+'%'}
-function close(){cur=-1;$('card').classList.remove('open');mark();list.querySelectorAll('.cur').forEach(b=>b.classList.remove('cur'))}
-function step(d){const L=P.filter(q=>q.m==P[cur].m),k=L.indexOf(P[cur]);open(P.indexOf(L[(k+d+L.length)%L.length]))}
-list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)open(+b.dataset.i)});
+function close(){cur=-1;curW=-1;hl=[];kind='';$('cw').innerHTML='';$('card').classList.remove('open');mark();list.querySelectorAll('.cur').forEach(b=>b.classList.remove('cur'))}
+function chips(ks){$('cw').innerHTML=ks.map(k=>`<button data-w="${k}"><span class="sw" style="background:${W[k].c}"></span>${W[k].n}</button>`).join('')}
+const EX=P.filter(q=>q.m=='e');
+function openPW(p){kind='pw';cur=-1;curW=-1;hl=[p.id];if(!p.v[cv()])setView(VW.findIndex(v=>p.v[v]),true);else render();
+$('cn').textContent='Di che cosa è fatta';$('ct').textContent=p.n;$('cd').textContent=PW[p.id];chips(W.map((w,k)=>w.p.includes(p.id)?k:-1).filter(k=>k>=0));$('card').classList.add('open')}
+function openW(k){kind='w';cur=-1;curW=k;woodSel=k;const w=W[k];hl=[];if(!w.p.some(id=>P.find(q=>q.id==id).v[cv()]))setView(VW.findIndex(v=>w.p.some(id=>P.find(q=>q.id==id).v[v])),true);else render();
+$('cn').textContent=`Legno ${k+1} di ${W.length} · si usa per: ${w.p.map(id=>P.find(q=>q.id==id).n.toLowerCase()).join(', ')}`;$('ct').textContent=w.n;$('cd').textContent=w.t;$('cw').innerHTML='';$('card').classList.add('open')}
+function step(d){if(kind=='w')return openW((curW+d+W.length)%W.length);if(kind=='pw'){const k=EX.findIndex(q=>hl[0]==q.id);return openPW(EX[(k+d+EX.length)%EX.length])}const L=P.filter(q=>q.m==P[cur].m),k=L.indexOf(P[cur]);open(P.indexOf(L[(k+d+L.length)%L.length]))}
+list.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.t!=null){curT=+b.dataset.t;render();if(innerWidth<900)$('info').scrollIntoView({behavior:'smooth'});return}b.dataset.w!=null?openW(+b.dataset.w):open(+b.dataset.i)});
+$('cw').addEventListener('click',e=>{const b=e.target.closest('button');if(b)openW(+b.dataset.w)});
 $('x').onclick=close;$('prev').onclick=()=>step(-1);$('next').onclick=()=>step(1);
-$('rand').onclick=()=>{const L=mp(),r=L.filter(p=>!seen.has(p.id)),c=r.length?r:L;open(P.indexOf(c[Math.floor(Math.random()*c.length)]))};
+$('rand').onclick=()=>{if(mode=='c'){curT=Math.floor(Math.random()*T.length);return render()}if(mode=='w')return openW(Math.floor(Math.random()*W.length));const L=mp(),r=L.filter(p=>!seen.has(p.id)),c=r.length?r:L;open(P.indexOf(c[Math.floor(Math.random()*c.length)]))};
 $('lab').onclick=()=>{const on=$('scene').classList.toggle('show');$('lab').setAttribute('aria-pressed',on);$('lab').textContent=on?'Nascondi i nomi':'Mostra i nomi'};
-$('mE').onclick=()=>{if(mode!='e'){close();setMode('e',true)}};$('mI').onclick=()=>{if(mode!='i'){close();setMode('i',true)}};
+$('mS').onclick=()=>{if(mode!='c'){close();setMode('c',false)}};$('mW').onclick=()=>{if(mode!='w'){close();setMode('w',true)}};$('mE').onclick=()=>{if(mode!='e'){close();setMode('e',true)}};$('mI').onclick=()=>{if(mode!='i'){close();setMode('i',true)}};
 document.addEventListener('keydown',e=>{if(e.key=='Escape')close();if(e.key=='ArrowLeft')setView(vi-1,true);if(e.key=='ArrowRight')setView(vi+1,true)});
 $('scene').addEventListener('click',e=>{if(!e.target.closest('.part,.arr'))close()});
 $('al').onclick=e=>{e.stopPropagation();setView(vi-1,true)};$('ar').onclick=e=>{e.stopPropagation();setView(vi+1,true)};
@@ -290,5 +380,6 @@ $('scene').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changed
 render();
 }
 </script>
+<script>if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))</script>
 </body>
 </html>
