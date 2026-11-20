@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La chitarra classica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: allegra, da aula di musica, chiara per ragazzi
+   IDEA: una tavola illustrata da appendere in classe, ma da toccare
+   PICTURE: chitarra classica grande in una stanza soleggiata, parti cliccabili
+   COLOUR and TYPE: muro giallo sole, turchese, accento magenta; Fredoka + Nunito
+   LAYOUT: titolo, scena grande, elenco parti a lato (sotto su telefono), riquadro che si apre */
+:root{color-scheme:light dark;--bg:light-dark(#fff4d6,#1d1a2e);--ink:light-dark(#2b1d12,#fbeedd);--soft:light-dark(#6b5444,#cdbcaa);--card:light-dark(#ffffff,#2a2640);--line:light-dark(#f0dcae,#3d3858);--acc:#e83f6f;--tq:#1fa89d}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,3.5vw,48px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto;display:grid;gap:clamp(18px,3vw,40px);grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+h1{font:700 clamp(32px,4.4vw,50px)/1.05 Fredoka,sans-serif;margin:0 0 10px;text-wrap:balance}
+.intro{color:var(--soft);margin:0 0 18px;max-width:60ch}
+.scene{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(120,60,0,.45);background:#ffd76e}
+.scene svg{display:block;width:100%;height:auto;max-height:88vh}
+.part{cursor:pointer;transition:filter .2s}
+.part:hover{filter:brightness(1.12)}
+.part.on{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 9px var(--acc))}
+.part:focus{outline:none}.part:focus-visible{filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px var(--tq))}
+.seg{display:inline-flex;background:var(--line);border-radius:999px;padding:4px;margin:0 0 14px;flex-wrap:wrap}.seg button{border:0;background:none;letter-spacing:.02em}.seg .act{background:var(--acc);color:#fff}
+.arr{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;padding:0;font-size:34px;line-height:1;border:0;background:rgba(255,255,255,.85);color:#2b1d12;box-shadow:0 6px 16px rgba(0,0,0,.25)}#al{left:10px}#ar{right:10px}
+.pill{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#2b1d12;color:#fff;font:600 17px Fredoka,sans-serif;padding:6px 16px;border-radius:999px;white-space:nowrap}
+#labels{pointer-events:none;opacity:0;transition:opacity .25s}
+.show #labels{opacity:1}
+#gt{transition:opacity .22s}#gt.fade,.show #labels.fade{opacity:0}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+button{font:700 16px Nunito,sans-serif;min-height:44px;padding:0 18px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button:focus-visible{outline:3px solid var(--tq);outline-offset:2px}
+.prim{background:var(--tq);border-color:var(--tq);color:#fff}
+.count{font-weight:700;color:var(--soft)}
+.meter{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0 18px}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--tq),var(--acc));transition:width .4s}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:0;margin:0;list-style:none}
+.list button{width:100%;text-align:start;border-radius:14px;padding:8px 12px;display:flex;gap:10px;align-items:center}
+.list b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--line);font-size:13px}
+.list .seen b{background:var(--tq);color:#fff}
+.list .cur{border-color:var(--acc)}
+#card{position:fixed;left:50%;bottom:max(16px,3vh);width:min(460px,calc(100% - 24px));transform:translate(-50%,140%);background:var(--card);border-radius:22px;padding:20px 22px 18px;box-shadow:0 24px 60px -12px rgba(0,0,0,.45);border-top:8px solid var(--acc);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);z-index:5}
+#card.open{transform:translate(-50%,0)}
+#card h2{font:600 30px/1.1 Fredoka,sans-serif;margin:0 0 8px;padding-right:44px}
+#card .num{font-weight:700;color:var(--acc);font-size:14px}
+#card p{margin:0 0 14px}
+#x{position:absolute;top:12px;right:12px;width:44px;padding:0;font-size:22px}
+.nav{display:flex;justify-content:space-between;gap:8px}
+footer{text-align:center;color:var(--soft);font-size:14px;padding-bottom:28px}
+@media(max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){#gt,#labels,#card,.meter i{transition:none}}
+</style>
+</head>
+<body>
+<div class="band">
+<div class="wrap">
+<div>
+<h1>Le parti della chitarra classica</h1>
+<div class="seg" role="group" aria-label="Modalità"><button id="mE" class="act" aria-pressed="true">ESTERNAMENTE</button><button id="mI" aria-pressed="false">INTERNAMENTE</button></div>
+<p class="intro">Tocca una parte dello strumento per scoprire come si chiama e a cosa serve. Con le frecce (o scorrendo col dito) giri la chitarra: davanti, di lato e dietro.</p>
+<div class="scene" id="scene">
+<svg viewBox="0 0 800 1000" role="img" aria-label="Chitarra classica in una stanza luminosa, con parti cliccabili">
+<defs>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#ffc35c"/></linearGradient>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd6ff"/><stop offset="1" stop-color="#d8f5ff"/></linearGradient>
+<linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="top" cx=".5" cy=".55" r=".6"><stop offset="0" stop-color="#f7d79a"/><stop offset=".75" stop-color="#e8b870"/><stop offset="1" stop-color="#c98a44"/></radialGradient>
+<linearGradient id="neckG" x1="0" x2="1"><stop offset="0" stop-color="#8a4a22"/><stop offset=".5" stop-color="#b8713c"/><stop offset="1" stop-color="#7a3e1c"/></linearGradient>
+<linearGradient id="board" x1="0" x2="1"><stop offset="0" stop-color="#1c1410"/><stop offset=".5" stop-color="#3a2a20"/><stop offset="1" stop-color="#1c1410"/></linearGradient>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></radialGradient>
+<path id="body" d="M200,520 C125,520 52,556 50,640 C49,700 76,712 76,745 C76,782 1,815 1,905 C1,995 105,1048 200,1048 C295,1048 399,995 399,905 C399,815 324,782 324,745 C324,712 351,700 350,640 C348,556 275,520 200,520 Z"/>
+<clipPath id="bc"><use href="#body"/></clipPath>
+<radialGradient id="backG" cx=".45" cy=".5" r=".65"><stop offset="0" stop-color="#a5582c"/><stop offset=".8" stop-color="#6e3416"/><stop offset="1" stop-color="#4a200c"/></radialGradient>
+<linearGradient id="neckB" x1="0" x2="1"><stop offset="0" stop-color="#7a3e1c"/><stop offset=".45" stop-color="#d08a50"/><stop offset="1" stop-color="#6e3618"/></linearGradient>
+<linearGradient id="sideG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a522a"/><stop offset=".2" stop-color="#b8693a"/><stop offset=".43" stop-color="#5e2c12"/><stop offset=".72" stop-color="#bb6c3c"/><stop offset="1" stop-color="#7e4020"/></linearGradient>
+</defs>
+<!-- stanza -->
+<rect width="800" height="790" fill="url(#wall)"/>
+<g opacity=".18" fill="#fff"><circle cx="300" cy="60" r="6"/><circle cx="520" cy="420" r="6"/><circle cx="120" cy="520" r="6"/><circle cx="680" cy="600" r="6"/><circle cx="470" cy="80" r="6"/><circle cx="260" cy="660" r="6"/></g>
+<rect x="40" y="90" width="220" height="300" rx="14" fill="#1fa89d"/>
+<rect x="56" y="106" width="188" height="268" rx="6" fill="url(#sky)"/>
+<circle cx="190" cy="170" r="30" fill="#fff36b"/>
+<g fill="#fff"><ellipse cx="110" cy="250" rx="34" ry="14"/><ellipse cx="135" cy="240" rx="22" ry="14"/></g>
+<rect x="146" y="106" width="8" height="268" fill="#1fa89d"/><rect x="56" y="236" width="188" height="8" fill="#1fa89d"/>
+<rect x="28" y="384" width="244" height="16" rx="6" fill="#138a80"/>
+<polygon points="56,374 244,374 520,790 120,790" fill="url(#beam)"/>
+<g><rect x="560" y="120" width="180" height="220" rx="10" fill="#fff"/><rect x="572" y="132" width="156" height="196" rx="4" fill="#ff7aa2"/>
+<circle cx="620" cy="250" r="24" fill="#2b1d12"/><circle cx="690" cy="225" r="24" fill="#2b1d12"/><path d="M640,250 V170 L714,150 V225" stroke="#2b1d12" stroke-width="8" fill="none"/><path d="M640,175 L714,155" stroke="#2b1d12" stroke-width="14"/></g>
+<rect x="690" y="500" width="8" height="290" fill="#5a3a24"/><ellipse cx="694" cy="790" rx="40" ry="8" fill="#5a3a24"/>
+<circle cx="694" cy="470" r="90" fill="url(#glow)"/>
+<path d="M650,500 L738,500 L716,430 L672,430 Z" fill="#e83f6f"/>
+<rect y="762" width="800" height="28" fill="#ff8f6b"/>
+<rect y="790" width="800" height="210" fill="#e3a768"/>
+<g stroke="#c98a4e" stroke-width="3"><path d="M0,840 H800 M0,900 H800 M0,960 H800"/><path d="M180,790 V840 M520,790 V840 M330,840 V900 M690,840 V900 M110,900 V960 M450,900 V960 M260,960 V1000 M620,960 V1000"/></g>
+<ellipse cx="400" cy="935" rx="340" ry="58" fill="#1fa89d"/><ellipse cx="400" cy="935" rx="290" ry="42" fill="none" stroke="#ff7aa2" stroke-width="8" stroke-dasharray="20 14"/>
+<g><ellipse cx="80" cy="640" rx="26" ry="70" fill="#2e9e4f" transform="rotate(-25 80 640)"/><ellipse cx="130" cy="620" rx="24" ry="80" fill="#3cb95f" transform="rotate(12 130 620)"/><ellipse cx="160" cy="670" rx="20" ry="60" fill="#2e9e4f" transform="rotate(35 160 670)"/>
+<path d="M60,700 H180 L166,800 H74 Z" fill="#e2683c"/><rect x="54" y="694" width="132" height="16" rx="5" fill="#c8552e"/></g>
+
+<!-- chitarra -->
+<ellipse cx="400" cy="982" rx="170" ry="14" fill="#000" opacity=".18"/>
+<g transform="translate(220,25) scale(.9)"><g id="gt">
+<g class="view" id="v-f">
+<g class="part" data-p="fasce"><use href="#body" transform="translate(9,8)" fill="#6e3618"/><use href="#body" transform="translate(4,4)" fill="#8b4a24"/></g>
+<g class="part" data-p="tacco"><path d="M160,470 Q156,505 128,528 L272,528 Q244,505 240,470 Z" fill="#7a3e1c"/></g>
+<g class="part" data-p="manico"><polygon points="168,166 232,166 236,525 164,525" fill="url(#neckG)"/></g>
+<g class="part" data-p="tavola"><use href="#body" fill="url(#top)" stroke="#5a2c12" stroke-width="4"/><use href="#body" fill="none" stroke="#f1e3c4" stroke-width="1.5" transform="translate(200 784) scale(.976) translate(-200 -784)"/></g>
+<g class="part" data-p="filetti"><use href="#body" fill="none" stroke="#2b1408" stroke-width="7"/><use href="#body" fill="none" stroke="#f2e2bf" stroke-width="2"/></g>
+<g class="part" data-p="rosetta"><circle cx="200" cy="686" r="53" fill="none" stroke="#3a1f0f" stroke-width="16"/><circle cx="200" cy="686" r="53" fill="none" stroke="#1fa89d" stroke-width="9" stroke-dasharray="5 4"/><circle cx="200" cy="686" r="53" fill="none" stroke="#e83f6f" stroke-width="4" stroke-dasharray="3 6"/><circle cx="200" cy="686" r="62" fill="none" stroke="#3a1f0f" stroke-width="2"/></g>
+<g class="part" data-p="buca"><circle cx="200" cy="686" r="42" fill="#1a0d06"/><ellipse cx="190" cy="698" rx="22" ry="14" fill="#3a2214" opacity=".6"/></g>
+<g class="part" data-p="tastiera"><polygon points="176,170 224,170 232,636 168,636" fill="url(#board)"/></g>
+<g class="part" data-p="tasti" id="frets"></g>
+<g class="part" data-p="ponticello"><rect x="140" y="858" width="120" height="46" rx="8" fill="#3a1f0f"/><rect x="164" y="878" width="72" height="22" rx="4" fill="#5c321a"/><g fill="#d9c08a" id="ties"></g></g>
+<g class="part" data-p="selletta"><rect x="168" y="862" width="64" height="9" rx="3" fill="#f6f0e0" stroke="#bfae8c"/></g>
+<g class="part" data-p="paletta"><path d="M168,168 L160,48 Q200,22 240,48 L232,168 Z" fill="#6b3518"/><path d="M170,60 Q200,40 230,60" stroke="#e8b870" stroke-width="3" fill="none"/><rect x="179" y="56" width="14" height="88" rx="7" fill="#200f06"/><rect x="207" y="56" width="14" height="88" rx="7" fill="#200f06"/></g>
+<g class="part" data-p="meccaniche" id="tuners"></g>
+<g class="part" data-p="capotasto"><rect x="170" y="164" width="60" height="10" rx="3" fill="#f6f0e0" stroke="#bfae8c"/></g>
+<g class="part" data-p="corde" id="strings"></g>
+</g>
+<g class="view" id="v-l" style="display:none">
+<g class="part" data-p="fasce"><path d="M160,522 Q205,515 250,520 L250,1046 Q200,1054 150,1046 Z" fill="url(#sideG)"/></g>
+<g class="part" data-p="fondo"><path d="M150,1046 L160,522 L166,522 L156,1046 Z" fill="#3e1b0a"/></g>
+<g class="part" data-p="tavola"><rect x="244" y="520" width="7" height="527" fill="#f0cf90"/></g>
+<g class="part" data-p="filetti"><rect x="156" y="523" width="5" height="523" fill="#f2e2bf"/><rect x="239" y="520" width="5" height="527" fill="#f2e2bf"/><rect x="157.5" y="523" width="2" height="523" fill="#1fa89d"/><rect x="240.5" y="520" width="2" height="527" fill="#e83f6f"/></g>
+<g class="part" data-p="manico"><path d="M224,180 L250,172 L250,445 L220,445 C219,360 220,260 224,180 Z" fill="url(#neckG)"/></g>
+<g class="part" data-p="tacco"><path d="M220,428 C219,470 204,500 158,522 L250,522 L250,428 Z" fill="#8a4824"/><path d="M220,428 C219,470 204,500 158,522" fill="none" stroke="#5a2c12" stroke-width="2"/></g>
+<g class="part" data-p="paletta"><polygon points="250,172 220,28 202,32 224,182" fill="#6b3518"/><line x1="250" y1="172" x2="220" y2="28" stroke="#e8b870" stroke-width="2"/></g>
+<g class="part" data-p="meccaniche"><g fill="#f6efe0" stroke="#9c8a66" stroke-width="2"><circle cx="216" cy="62" r="11"/><circle cx="222" cy="92" r="11"/><circle cx="228" cy="121" r="11"/></g><g fill="#c9a13b"><circle cx="216" cy="62" r="3"/><circle cx="222" cy="92" r="3"/><circle cx="228" cy="121" r="3"/></g></g>
+<g class="part" data-p="tastiera"><rect x="250" y="170" width="8" height="466" fill="#2a1d16"/></g>
+<g class="part" data-p="tasti" id="fretsL"></g>
+<g class="part" data-p="capotasto"><rect x="250" y="163" width="12" height="9" rx="2" fill="#f6f0e0" stroke="#bfae8c"/></g>
+<g class="part" data-p="ponticello"><rect x="250" y="856" width="12" height="50" rx="3" fill="#3a1f0f"/></g>
+<g class="part" data-p="selletta"><rect x="261" y="860" width="5" height="9" rx="1" fill="#f6f0e0" stroke="#bfae8c"/></g>
+<g class="part" data-p="corde"><path d="M228,121 L261,164 L265,861 L262,892" fill="none" stroke="#d7c08f" stroke-width="3"/><path d="M216,62 L262,166 L266,862" fill="none" stroke="#fbf6ea" stroke-width="2"/><path d="M262,166 L266,862" stroke="transparent" stroke-width="10"/></g>
+</g>
+<g class="view" id="v-r" style="display:none">
+<g class="part" data-p="fasce"><use href="#body" transform="translate(9,8)" fill="#5a2a12"/><use href="#body" transform="translate(4,4)" fill="#7a3e1c"/></g>
+<g class="part" data-p="fondo"><use href="#body" fill="url(#backG)" stroke="#3a1a08" stroke-width="4"/><g clip-path="url(#bc)" fill="none" stroke="#3e1b0a" stroke-width="2" opacity=".35"><path d="M60,520 Q80,780 50,1050 M110,520 Q130,800 100,1050 M150,520 Q165,780 145,1050 M250,520 Q235,780 255,1050 M290,520 Q270,800 300,1050 M340,520 Q320,780 350,1050"/></g><g clip-path="url(#bc)"><rect x="195" y="515" width="10" height="540" fill="#f2e2bf"/><line x1="200" y1="515" x2="200" y2="1055" stroke="#1fa89d" stroke-width="4" stroke-dasharray="6 6"/></g></g>
+<g class="part" data-p="filetti"><use href="#body" fill="none" stroke="#f2e2bf" stroke-width="7"/><use href="#body" fill="none" stroke="#2b1408" stroke-width="2"/></g>
+<g class="part" data-p="manico"><polygon points="168,166 232,166 236,530 164,530" fill="url(#neckB)"/></g>
+<g class="part" data-p="tacco"><path d="M164,430 C166,490 150,514 136,534 L264,534 C250,514 234,490 236,430 Z" fill="url(#neckB)"/><path d="M150,534 Q200,566 250,534 Z" fill="#3a1a08"/></g>
+<g class="part" data-p="paletta"><path d="M168,168 L160,48 Q200,22 240,48 L232,168 Z" fill="#5a2c12"/><rect x="179" y="56" width="14" height="88" rx="7" fill="#200f06"/><rect x="207" y="56" width="14" height="88" rx="7" fill="#200f06"/></g>
+<g class="part" data-p="meccaniche" id="tunersB"></g>
+</g>
+<g class="view" id="i-f" style="display:none">
+<g opacity=".3"><path d="M168,168 L160,48 Q200,22 240,48 L232,168 Z" fill="#6b3518"/><polygon points="168,166 232,166 236,525 164,525" fill="url(#neckG)"/><polygon points="176,170 224,170 230,525 170,525" fill="#2a1d16"/></g>
+<g class="part" data-p="cassa"><use href="#body" fill="#f4e2bb" stroke="#6e3618" stroke-width="6"/><circle cx="200" cy="686" r="44" fill="#1a0d06"/></g>
+<g class="part" data-p="controfasce" clip-path="url(#bc)"><use href="#body" fill="none" stroke="#c48a4c" stroke-width="18"/><use href="#body" fill="none" stroke="#8a5a2a" stroke-width="18" stroke-dasharray="2 9"/></g>
+<g class="part" data-p="rinfbuca"><rect x="126" y="646" width="22" height="80" rx="4" fill="#e4bd7c" stroke="#a8713a"/><rect x="252" y="646" width="22" height="80" rx="4" fill="#e4bd7c" stroke="#a8713a"/></g>
+<g class="part" data-p="barre" clip-path="url(#bc)"><rect x="30" y="610" width="340" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="50" y="744" width="300" height="12" fill="#d9a860" stroke="#8a5a2a"/></g>
+<g class="part" data-p="catenatura" id="fan"></g>
+<g class="part" data-p="chiusura" stroke="#b07a40" stroke-width="7" stroke-linecap="round"><line x1="55" y1="950" x2="185" y2="1030"/><line x1="345" y1="950" x2="215" y2="1030"/></g>
+<g class="part" data-p="zoccolo"><path d="M160,522 L240,522 L240,560 Q240,602 200,608 Q160,602 160,560 Z" fill="#b0703c" stroke="#6e3618" stroke-width="2"/></g>
+<g class="part" data-p="blocco" clip-path="url(#bc)"><rect x="168" y="1018" width="64" height="34" rx="4" fill="#a86a36" stroke="#6e3618" stroke-width="2"/></g>
+</g>
+<g class="view" id="i-l" style="display:none">
+<g opacity=".3"><path d="M224,180 L250,172 L250,445 L220,445 C219,360 220,260 224,180 Z" fill="url(#neckG)"/><polygon points="250,172 220,28 202,32 224,182" fill="#6b3518"/><rect x="250" y="170" width="8" height="466" fill="#2a1d16"/></g>
+<g class="part" data-p="cassa"><path d="M160,522 Q205,515 250,520 L250,1046 Q200,1054 150,1046 Z" fill="#4a2814"/><rect x="150" y="522" width="6" height="524" fill="#7a3a1e"/><rect x="244" y="520" width="7" height="527" fill="#f0cf90"/></g>
+<g class="part" data-p="rinffasce"><rect x="164" y="676" width="72" height="8" fill="#d9a860"/><rect x="164" y="836" width="72" height="8" fill="#d9a860"/></g>
+<g class="part" data-p="controfasce"><rect x="156" y="524" width="8" height="520" fill="#c48a4c"/><rect x="236" y="522" width="8" height="522" fill="#c48a4c"/><path d="M160,524 V1044 M240,522 V1044" stroke="#8a5a2a" stroke-width="8" stroke-dasharray="2 9"/></g>
+<g class="part" data-p="barre"><rect x="226" y="609" width="18" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="226" y="744" width="18" height="12" fill="#d9a860" stroke="#8a5a2a"/></g>
+<g class="part" data-p="catenatura"><rect x="237" y="768" width="7" height="240" fill="#e0aa62" stroke="#8a5a2a"/></g>
+<g class="part" data-p="catenefondo"><rect x="156" y="594" width="16" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="156" y="754" width="16" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="156" y="914" width="16" height="12" fill="#d9a860" stroke="#8a5a2a"/></g>
+<g class="part" data-p="zoccolo"><path d="M156,522 L244,522 L244,608 Q238,614 232,604 L232,574 L156,574 Z" fill="#b0703c" stroke="#6e3618" stroke-width="2"/></g>
+<g class="part" data-p="blocco"><rect x="156" y="1016" width="88" height="30" fill="#a86a36" stroke="#6e3618" stroke-width="2"/></g>
+</g>
+<g class="view" id="i-r" style="display:none">
+<g opacity=".3"><path d="M168,168 L160,48 Q200,22 240,48 L232,168 Z" fill="#5a2c12"/><polygon points="168,166 232,166 236,530 164,530" fill="url(#neckB)"/></g>
+<g class="part" data-p="cassa"><use href="#body" fill="#f0d6a8" stroke="#5a2a12" stroke-width="6"/></g>
+<g class="part" data-p="controfasce" clip-path="url(#bc)"><use href="#body" fill="none" stroke="#c48a4c" stroke-width="18"/><use href="#body" fill="none" stroke="#8a5a2a" stroke-width="18" stroke-dasharray="2 9"/></g>
+<g class="part" data-p="centrale"><rect x="193" y="528" width="14" height="514" fill="#e8c88c"/><line x1="200" y1="528" x2="200" y2="1042" stroke="#b08850" stroke-width="14" stroke-dasharray="2 5"/></g>
+<g class="part" data-p="catenefondo" clip-path="url(#bc)"><rect x="30" y="594" width="340" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="50" y="754" width="300" height="12" fill="#d9a860" stroke="#8a5a2a"/><rect x="0" y="914" width="400" height="12" fill="#d9a860" stroke="#8a5a2a"/></g>
+<g class="part" data-p="etichetta"><rect x="164" y="658" width="72" height="56" rx="3" fill="#fffaf0" stroke="#8a6a4a" stroke-width="2"/><g stroke="#8a6a4a" stroke-width="3"><line x1="176" y1="674" x2="224" y2="674"/><line x1="182" y1="688" x2="218" y2="688"/><line x1="188" y1="700" x2="212" y2="700"/></g></g>
+<g class="part" data-p="zoccolo"><rect x="160" y="522" width="80" height="48" rx="6" fill="#b0703c" stroke="#6e3618" stroke-width="2"/></g>
+<g class="part" data-p="blocco" clip-path="url(#bc)"><rect x="168" y="1018" width="64" height="34" rx="4" fill="#a86a36" stroke="#6e3618" stroke-width="2"/></g>
+</g>
+</g></g>
+<g transform="translate(220,25) scale(.9)"><g id="labels" font-family="Nunito,sans-serif" font-weight="700" font-size="22"></g></g>
+</svg>
+<button class="arr" id="al" aria-label="Ruota a sinistra">‹</button><button class="arr" id="ar" aria-label="Ruota a destra">›</button><div class="pill" id="vn">Davanti</div>
+</div>
+</div>
+
+<div>
+<div class="bar">
+<button class="prim" id="lab" aria-pressed="false">Mostra i nomi</button>
+<button id="rand">Una a caso</button>
+</div>
+<div class="count" id="cnt">Parti scoperte: 0 su 28</div>
+<div class="meter"><i id="met"></i></div>
+<ul class="list" id="list"></ul>
+</div>
+</div>
+</div>
+
+<div id="card" role="dialog" aria-live="polite" aria-labelledby="ct">
+<button id="x" aria-label="Chiudi">×</button>
+<div class="num" id="cn"></div>
+<h2 id="ct"></h2>
+<p id="cd"></p>
+<div class="nav"><button id="prev">‹ Precedente</button><button id="next">Successiva ›</button></div>
+</div>
+
+<footer>Copyright © Ignazio Paolicelli</footer>
+
+<script>
+{
+const P=[
+{m:'e',id:'paletta',n:'Paletta',v:{f:[200,95,'l',70],l:[222,95,'l',70],r:[196,100,'l',70]},t:'È la parte più alta della chitarra. Nella chitarra classica ha due finestre (fessure) dentro cui passano i rulli dove si avvolgono le corde. Di lato si vede bene che è piegata all’indietro: così le corde premono con forza sul capotasto.'},
+{m:'e',id:'meccaniche',n:'Meccaniche',v:{f:[262,98,'r',95],l:[233,92,'r',95],r:[262,98,'r',95]},t:'Sono le chiavette ai lati della paletta. Girandole, la corda si tende (la nota sale) o si allenta (la nota scende): servono ad accordare la chitarra. Dentro hanno un piccolo ingranaggio che le fa girare con precisione.'},
+{m:'e',id:'capotasto',n:'Capotasto',v:{f:[200,169,'l',175],l:[258,167,'r',170]},t:'Piccola barretta in osso o plastica tra la paletta e la tastiera. Ha sei solchi che tengono le corde alla giusta distanza e altezza. Da qui comincia la parte della corda che vibra.'},
+{m:'e',id:'tasti',n:'Tasti',v:{f:[221,250,'r',250],l:[259,250,'r',250]},t:'Barrette di metallo inserite nella tastiera. Ogni tasto corrisponde a un semitono: premendo la corda subito dietro un tasto la parte che vibra si accorcia e la nota diventa più acuta. Al 12° tasto, dove il manico incontra la cassa, si trova l’ottava.'},
+{m:'e',id:'manico',n:'Manico',v:{f:[234,350,'r',345],l:[226,330,'l',330],r:[228,330,'r',330]},t:'Il lungo pezzo di legno (spesso cedro o mogano) che unisce la paletta alla cassa. Si impugna con la mano sinistra, col pollice appoggiato dietro. Nella chitarra classica è più largo e piatto che nella chitarra elettrica, così le dita hanno più spazio.'},
+{m:'e',id:'tastiera',n:'Tastiera',v:{f:[190,420,'l',420],l:[254,420,'r',420]},t:'Listello di legno duro e scuro (ebano o palissandro) incollato sopra il manico. Qui le dita della mano sinistra premono le corde per cambiare nota. Sulla chitarra classica di solito non ci sono pallini segnatasti sul davanti.'},
+{m:'e',id:'tacco',n:'Tacco',v:{f:[252,512,'r',505],l:[205,495,'l',500],r:[238,480,'r',480]},t:'È il punto in cui il manico si unisce alla cassa: si vede bene di lato e da dietro. Nella chitarra classica tradizionale (costruzione “spagnola”) manico e tacco continuano dentro la cassa nello zoccolo (vedi INTERNAMENTE).'},
+{m:'e',id:'corde',n:'Corde',v:{f:[212,575,'r',590],l:[264,600,'r',600]},t:'Sono sei, in nylon. Le tre acute (Mi, Si, Sol) sono di nylon pieno; le tre gravi (Re, La, Mi) sono rivestite di un sottile filo metallico. Dalla più grave alla più acuta: Mi, La, Re, Sol, Si, Mi. Si suonano con le dita della mano destra.'},
+{m:'e',id:'rosetta',n:'Rosetta',v:{f:[148,676,'l',650]},t:'La decorazione attorno alla buca, fatta con un mosaico di minuscoli pezzetti di legno colorato. È come la firma del liutaio (chi costruisce la chitarra) e rinforza anche il bordo della buca.'},
+{m:'e',id:'buca',n:'Buca',v:{f:[222,698,'r',700]},t:'Il foro rotondo sulla tavola. L’aria dentro la cassa vibra insieme al legno ed esce dalla buca: questo aiuta soprattutto i suoni gravi a essere più pieni e forti.'},
+{m:'e',id:'tavola',n:'Tavola armonica',v:{f:[60,880,'l',800],l:[248,760,'r',760]},t:'La parte davanti della cassa, la più importante per il suono. È di abete o cedro, sottile appena 2–3 millimetri. Le corde la fanno vibrare e lei trasforma la vibrazione in un suono ricco e forte.'},
+{m:'e',id:'filetti',n:'Filetti',v:{f:[334,790,'r',770],l:[158,620,'l',620],r:[348,640,'r',640]},t:'Sottili strisce di legno chiaro e scuro lungo i bordi della cassa, dove tavola e fondo incontrano le fasce. Proteggono gli spigoli dagli urti, chiudono le giunture e decorano lo strumento.'},
+{m:'e',id:'fasce',n:'Fasce',v:{f:[406,910,'r',840],l:[200,800,'l',800],r:[406,910,'r',860]},t:'I fianchi curvi della cassa, piegati con il calore. Uniscono la tavola davanti al fondo dietro, formando la cassa armonica, cioè la “scatola” che fa risuonare lo strumento. Sono alte circa 9–10 cm e spesso di palissandro.'},
+{m:'e',id:'fondo',n:'Fondo',v:{l:[153,930,'l',930],r:[110,800,'l',800]},t:'La parte posteriore della cassa, di solito in palissandro. Spesso è fatta di due metà unite al centro da un filetto decorativo. Riflette le vibrazioni dentro la cassa e dà colore al suono. Quando si suona, appoggia contro il corpo di chi suona.'},
+{m:'e',id:'selletta',n:'Selletta',v:{f:[185,866,'l',880],l:[265,864,'r',860]},t:'Listello d’osso infilato nel ponticello, su cui appoggiano le corde. È il punto dove finisce la parte che vibra. La sua altezza decide quanto le corde sono lontane dalla tastiera.'},
+{m:'e',id:'ponticello',n:'Ponticello',v:{f:[258,890,'r',920],l:[258,900,'r',910]},t:'Il pezzo di legno incollato sulla tavola dove le corde vengono legate con un nodo. Porta la vibrazione delle corde fino alla tavola armonica.'},
+{m:'i',id:'cassa',n:'Cassa armonica',v:{f:[120,820,'l',800],l:[200,900,'l',880],r:[100,850,'l',850]},t:'Lo spazio vuoto dentro la chitarra, chiuso da tavola, fasce e fondo. L’aria qui dentro vibra insieme al legno e amplifica il suono, soprattutto i bassi: la cassa “risuona” su una nota grave, più o meno il Sol basso.'},
+{m:'i',id:'catenatura',n:'Catenatura a ventaglio',s:'Catenatura',v:{f:[258,900,'r',900],l:[240,880,'r',880]},t:'Sottili listelli di abete incollati sotto la tavola e aperti a ventaglio nella parte bassa, di solito 5–7. Resa celebre dal liutaio spagnolo Antonio de Torres nell’Ottocento, rinforza la tavola sottilissima contro la tensione delle corde lasciandola libera di vibrare. Numero, forma e spessore dei listelli cambiano il suono di ogni chitarra.'},
+{m:'i',id:'barre',n:'Barre armoniche',v:{f:[320,616,'r',620],l:[235,615,'r',615]},t:'Barre di legno messe di traverso sotto la tavola: una sopra e una sotto la buca. Irrigidiscono la parte alta della tavola, indebolita dal foro della buca, e separano la zona alta (più rigida) da quella bassa che vibra di più.'},
+{m:'i',id:'chiusura',n:'Catene di chiusura',v:{f:[100,978,'l',980]},t:'Due listelli inclinati che chiudono il ventaglio verso il fondo della cassa, formando una specie di V. Tengono uniti i listelli del ventaglio e controllano come vibra la parte più bassa della tavola.'},
+{m:'i',id:'rinfbuca',n:'Rinforzo della buca',s:'Rinforzo buca',v:{f:[137,700,'l',700]},t:'Piccole piastre di legno incollate sotto la tavola ai lati della buca. Il legno vicino al foro è più debole: questi rinforzi evitano che si crepi.'},
+{m:'i',id:'zoccolo',n:'Zoccolo (piede del manico)',s:'Zoccolo',v:{f:[225,560,'r',545],l:[200,548,'l',540],r:[200,545,'l',545]},t:'Il blocco di legno dentro la cassa dove arriva il manico. Nella costruzione spagnola manico, tacco e zoccolo sono un unico pezzo: le fasce si infilano in due fessure dello zoccolo e un “piede” si allunga sotto la tavola. È ciò che tiene il manico saldo per anni.'},
+{m:'i',id:'blocco',n:'Blocco inferiore',v:{f:[215,1035,'r',1030],l:[200,1031,'l',1030],r:[200,1035,'l',1030]},t:'Un blocchetto di legno incollato in fondo alla cassa, dove le due fasce si incontrano. Le tiene unite e rende solida la parte bassa della chitarra.'},
+{m:'i',id:'controfasce',n:'Controfasce',v:{f:[6,905,'l',900],l:[240,985,'r',985],r:[394,905,'r',905]},t:'Listelli di legno incollati lungo i bordi interni delle fasce, spesso fatti di tanti tasselli separati (detti dentelli). Danno più superficie per incollare la tavola e il fondo alle fasce, sottilissime.'},
+{m:'i',id:'rinffasce',n:'Rinforzi delle fasce',s:'Rinforzi fasce',v:{l:[200,680,'l',680]},t:'Piccole strisce di legno incollate dentro le fasce, di traverso alla venatura. Se la fascia prende un colpo, impediscono che una crepa si allunghi.'},
+{m:'i',id:'catenefondo',n:'Catene del fondo',v:{l:[164,760,'l',760],r:[330,600,'r',600]},t:'Di solito tre barre incollate di traverso sotto il fondo. Lo tengono teso e un po’ bombato, così la cassa è più robusta e il fondo può riflettere bene il suono.'},
+{m:'i',id:'centrale',n:'Rinforzo centrale',v:{r:[200,830,'r',820]},t:'Una sottile striscia di legno incollata sulla giunta in mezzo al fondo, con la venatura di traverso. Tiene unite per sempre le due metà del fondo.'},
+{m:'i',id:'etichetta',n:'Etichetta del liutaio',s:'Etichetta',v:{r:[180,686,'l',700]},t:'Si legge guardando dentro la buca. Riporta il nome del liutaio o della fabbrica, la città, l’anno e a volte il numero dello strumento: è la sua “carta d’identità”.'}
+];
+const ns='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+const hw=y=>24+8*(y-170)/466;
+let f='',fl='';for(let n=1;n<=19;n++){const y=170+700*(1-2**(-n/12)),w=hw(y);f+=`<line x1="${200-w}" x2="${200+w}" y1="${y}" y2="${y}" stroke="#d9d4cc" stroke-width="3"/><line x1="${200-w}" x2="${200+w}" y1="${y}" y2="${y}" stroke="transparent" stroke-width="9"/>`;fl+=`<rect x="257" y="${y-2}" width="3" height="4" fill="#d9d4cc"/>`}
+$('frets').innerHTML=f;$('fretsL').innerHTML=fl+'<rect x="255" y="170" width="10" height="466" fill="transparent"/>';
+const ry=[70,98,126];let t='';
+ry.forEach(y=>{t+=`<rect x="180" y="${y-3}" width="12" height="6" fill="#f6f0e0"/><rect x="208" y="${y-3}" width="12" height="6" fill="#f6f0e0"/><line x1="140" x2="162" y1="${y}" y2="${y}" stroke="#c9a13b" stroke-width="5"/><line x1="238" x2="260" y1="${y}" y2="${y}" stroke="#c9a13b" stroke-width="5"/><ellipse cx="130" cy="${y}" rx="15" ry="9" fill="#f6efe0" stroke="#9c8a66" stroke-width="2"/><ellipse cx="270" cy="${y}" rx="15" ry="9" fill="#f6efe0" stroke="#9c8a66" stroke-width="2"/>`});
+$('tuners').innerHTML=t+'<rect x="157" y="56" width="7" height="88" rx="3" fill="#d9b24a"/><rect x="236" y="56" width="7" height="88" rx="3" fill="#d9b24a"/>';
+$('tunersB').innerHTML=t+'<rect x="164" y="52" width="16" height="96" rx="4" fill="#d9b24a"/><rect x="220" y="52" width="16" height="96" rx="4" fill="#d9b24a"/>'+ry.map(y=>`<circle cx="172" cy="${y}" r="6" fill="#a8842e"/><circle cx="228" cy="${y}" r="6" fill="#a8842e"/>`).join('');
+let s='',ti='';
+for(let i=0;i<6;i++){const xn=180+i*8,xs=176+i*9.6,hx=i<3?186:214,hy=ry[i<3?2-i:i-3],w=i<3?3.2-i*.4:2.2-(i-3)*.35,c=i<3?'#d7c08f':'#fbf6ea';
+s+=`<path d="M${hx},${hy} L${xn},170 L${xs},866 L${xs},889" fill="none" stroke="${c}" stroke-width="${w}"/><path d="M${xn},170 L${xs},866" stroke="transparent" stroke-width="8"/>`;ti+=`<circle cx="${xs}" cy="889" r="2.5"/>`}
+$('strings').innerHTML=s;$('ties').innerHTML=ti;
+const VW=['f','l','r'],VN={e:{f:'Davanti',l:'Di lato',r:'Dietro'},i:{f:'Tavola vista da dentro',l:'Sezione di lato',r:'Fondo visto da dentro'}};let vi=0,mode='e';
+let fan='';for(let i=0;i<7;i++)fan+=`<line x1="${200+(i-3)*7}" y1="768" x2="${200+(i-3)*46}" y2="1000" stroke="#c8904e" stroke-width="7" stroke-linecap="round"/>`;
+$('fan').innerHTML=fan;
+const cv=()=>VW[vi],vid=()=>(mode=='e'?'v-':'i-')+cv(),mp=()=>P.filter(p=>p.m==mode);
+function labels(){const v=cv();$('labels').innerHTML=mp().filter(p=>p.v[v]).map(p=>{const[ax,ay,sd,ly]=p.v[v],l=sd=='l',x=l?-5:425,nm=p.s||p.n,tw=nm.length*11+20,bx=l?x-tw+8:x-8;return `<path d="M${ax},${ay} L${l?x+14:x-14},${ly}" stroke="#2b1d12" stroke-width="2.5" fill="none"/><circle cx="${ax}" cy="${ay}" r="5" fill="#e83f6f" stroke="#fff" stroke-width="2"/><rect x="${bx}" y="${ly-19}" width="${tw}" height="36" rx="18" fill="#fff" stroke="#2b1d12" stroke-width="2"/><text x="${l?x-2:x+2}" y="${ly+8}" text-anchor="${l?'end':'start'}" fill="#2b1d12">${nm}</text>`}).join('')}
+const seen=new Set();let cur=-1;
+const list=$('list');
+function render(){document.querySelectorAll('.view').forEach(g=>g.style.display=g.id==vid()?'':'none');$('vn').textContent=VN[mode][cv()];labels();
+if(cur>=0){if(P[cur].m==mode&&P[cur].v[cv()])mark();else close()}
+list.innerHTML=mp().map(p=>{const i=P.indexOf(p);return `<li><button data-i="${i}" class="${seen.has(p.id)?'seen':''} ${i==cur?'cur':''}"><b>${mp().indexOf(p)+1}</b>${p.n}</button></li>`}).join('')}
+function swap(fn,anim){if(!anim||matchMedia('(prefers-reduced-motion: reduce)').matches){fn();render();return}
+$('gt').classList.add('fade');$('labels').classList.add('fade');setTimeout(()=>{fn();render();$('gt').classList.remove('fade');$('labels').classList.remove('fade')},230)}
+function setView(i,anim){swap(()=>{vi=(i+3)%3},anim)}
+function setMode(m,anim){$('mE').classList.toggle('act',m=='e');$('mI').classList.toggle('act',m=='i');$('mE').setAttribute('aria-pressed',m=='e');$('mI').setAttribute('aria-pressed',m=='i');swap(()=>{mode=m;vi=0},anim)}
+const parts=[...document.querySelectorAll('.part')];
+parts.forEach(g=>{g.setAttribute('tabindex','0');g.setAttribute('role','button');const p=P.find(q=>q.id==g.dataset.p);g.setAttribute('aria-label',p.n);
+g.addEventListener('click',e=>{e.stopPropagation();open(P.indexOf(p))});
+g.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();open(P.indexOf(p))}})});
+function mark(){parts.forEach(g=>g.classList.toggle('on',cur>=0&&g.dataset.p==P[cur].id))}
+function open(i){cur=i;const p=P[i];seen.add(p.id);
+if(p.m!=mode||!p.v[cv()]){const want=VW.findIndex(v=>p.v[v]);if(p.m!=mode){$('mE').classList.toggle('act',p.m=='e');$('mI').classList.toggle('act',p.m=='i')}swap(()=>{mode=p.m;if(!p.v[cv()])vi=want},true)}else render();
+mark();const l=mp().length,k=P.filter(q=>q.m==p.m).indexOf(p);
+$('cn').textContent=`Parte ${k+1} di ${P.filter(q=>q.m==p.m).length} · si vede: ${VW.filter(v=>p.v[v]).map(v=>VN[p.m][v].toLowerCase()).join(', ')}`;$('ct').textContent=p.n;$('cd').textContent=p.t;$('card').classList.add('open');
+$('cnt').textContent=seen.size==P.length?'Bravo! Hai scoperto tutte le 28 parti':`Parti scoperte: ${seen.size} su ${P.length}`;$('met').style.width=seen.size/P.length*100+'%'}
+function close(){cur=-1;$('card').classList.remove('open');mark();list.querySelectorAll('.cur').forEach(b=>b.classList.remove('cur'))}
+function step(d){const L=P.filter(q=>q.m==P[cur].m),k=L.indexOf(P[cur]);open(P.indexOf(L[(k+d+L.length)%L.length]))}
+list.addEventListener('click',e=>{const b=e.target.closest('button');if(b)open(+b.dataset.i)});
+$('x').onclick=close;$('prev').onclick=()=>step(-1);$('next').onclick=()=>step(1);
+$('rand').onclick=()=>{const L=mp(),r=L.filter(p=>!seen.has(p.id)),c=r.length?r:L;open(P.indexOf(c[Math.floor(Math.random()*c.length)]))};
+$('lab').onclick=()=>{const on=$('scene').classList.toggle('show');$('lab').setAttribute('aria-pressed',on);$('lab').textContent=on?'Nascondi i nomi':'Mostra i nomi'};
+$('mE').onclick=()=>{if(mode!='e'){close();setMode('e',true)}};$('mI').onclick=()=>{if(mode!='i'){close();setMode('i',true)}};
+document.addEventListener('keydown',e=>{if(e.key=='Escape')close();if(e.key=='ArrowLeft')setView(vi-1,true);if(e.key=='ArrowRight')setView(vi+1,true)});
+$('scene').addEventListener('click',e=>{if(!e.target.closest('.part,.arr'))close()});
+$('al').onclick=e=>{e.stopPropagation();setView(vi-1,true)};$('ar').onclick=e=>{e.stopPropagation();setView(vi+1,true)};
+let tx=null;$('scene').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+$('scene').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(dx)>60)setView(vi+(dx<0?1:-1),true)},{passive:true});
+render();
+}
+</script>
+</body>
+</html>
